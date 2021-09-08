@@ -106,7 +106,8 @@ CREATE DATABASE openvdm_po;
 Now create a new MySQL user specifically for interacting with only the OpenVDM database. In the example provided below the name of the user is 'openvdmDBUser' and the password for that new user is 'oxhzbeY8WzgBL3'.
 
 ```
-GRANT ALL PRIVILEGES ON openvdm_po.* To openvdmDBUser@localhost IDENTIFIED BY 'oxhzbeY8WzgBL3';
+CREATE user 'openvdmDBUser'@'localhost' IDENTIFIED WITH mysql_native_password BY 'oxhzbeY8WzgBL3';
+GRANT ALL PRIVILEGES ON openvdm_po.* To openvdmDBUser@localhost;
 ```
 It is not important what the name and passwork are for this new user however it is important to remember the designated username/password as it will be reference later in the installation.
 
@@ -137,7 +138,7 @@ Create the three required configuration files from the example files provided.
 ```
 sudo cp /opt/openvdm_portoffice/www/.htaccess.dist /opt/openvdm_portoffice/www/.htaccess
 sudo cp /opt/openvdm_portoffice/www/app/Core/Config.php.dist /opt/openvdm_portoffice/www/app/Core/Config.php
-sudo cp -r /opt/openvdm-portoffice/www/etc/datadashboard.yaml.dist /opt/openvdm-portoffice/www/etc/datadashboard.yaml
+sudo cp -r /opt/openvdm_portoffice/www/etc/datadashboard.yaml.dist /opt/openvdm_portoffice/www/etc/datadashboard.yaml
 ```
 
 Modify the three configuration files.
@@ -188,14 +189,14 @@ define('DB_PASS', 'oxhzbeY8WzgBL3');
 Create the web-application errorlog file
 
 ```
-sudo touch /opt/openvdm-portoffice/www/errorlog.html
-sudo chmod 777 /opt/openvdm-portoffice/www/errorlog.html
+sudo touch /opt/openvdm_portoffice/www/errorlog.html
+sudo chmod 777 /opt/openvdm_portoffice/www/errorlog.html
 ```
 
 Create a symbolic link from the web-application code directory to /var/www so that can be accessed by Apache
 
 ```
-sudo ln -s /opt/openvdm-portoffice/www /var/www/openvdm_portoffice
+sudo ln -s /opt/openvdm_portoffice/www /var/www/openvdm_portoffice
 ```
 
 ## Setup Apache
