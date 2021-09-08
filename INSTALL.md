@@ -1,13 +1,13 @@
-# OpenVDM - PortOffice v2.2
+# OpenVDM - PortOffice v2.6
 
 ## Install Guide
 
-At the time of this writing OpenVDMv2 - Port Office was built and tested against the Ubuntu 18.04 LTS operating system. It may be possible to build against other linux-based operating systems however for the purposes of this guide the instructions will assume Ubuntu 18.04 LTS is used.
+At the time of this writing OpenVDMv2 - Port Office was built and tested against the Ubuntu 20.04 LTS operating system. It may be possible to build against other linux-based operating systems however for the purposes of this guide the instructions will assume Ubuntu 20.04 LTS is used.
 
 ### Operating System
 Goto <https://www.ubuntu.com/download>
 
-Download Uubuntu for your hardware. At the time of this writing we are using 18.04 (64-bit)
+Download Uubuntu for your hardware. At the time of this writing we are using 20.04 (64-bit)
 
 Perform the default Uubuntu install. For these instructions the default account that is created is "survey" and the computer name is "PortOffice".
 
@@ -85,7 +85,8 @@ From a terminal window type:
 
 ```
 sudo apt-get install git
-git clone git://github.com/webbpinner/OpenVDMv2-PortOffice.git ~/OpenVDMv2-PortOffice
+cd
+git clone git clone https://github.com/OceanDataTools/openvdm_portoffice.git
 ```
 
 ### Create OpenVDMv2 Database
@@ -99,21 +100,21 @@ sudo mysql -h localhost -u root
 Once connected to MySQL, create the database by typing:
 
 ```
-CREATE DATABASE OpenVDMv2_PO;
+CREATE DATABASE openvdm_po;
 ```
 
 Now create a new MySQL user specifically for interacting with only the OpenVDM database. In the example provided below the name of the user is 'openvdmDBUser' and the password for that new user is 'oxhzbeY8WzgBL3'.
 
 ```
-GRANT ALL PRIVILEGES ON OpenVDMv2_PO.* To openvdmDBUser@localhost IDENTIFIED BY 'oxhzbeY8WzgBL3';
+GRANT ALL PRIVILEGES ON openvdm_po.* To openvdmDBUser@localhost IDENTIFIED BY 'oxhzbeY8WzgBL3';
 ```
 It is not important what the name and passwork are for this new user however it is important to remember the designated username/password as it will be reference later in the installation.
 
 To build the database schema and perform the initial import type:
 
 ```
-USE OpenVDMv2_PO;
-source ~/OpenVDMv2-PortOffice/OpenVDMv2-PO_db.sql;
+USE openvdm_po;
+source ~/openvdm_portoffice/database/openvdm_po_db.sql;
 ```
 
 Exit the MySQL console:
@@ -127,47 +128,32 @@ exit
 Copy the datadashboard configuration file to the proper location.  This will require creating a directory.
 
 ```
-sudo mkdir -p /usr/local/etc/openvdm
-sudo cp -r ~/OpenVDMv2-PortOffice/usr/local/etc/openvdm/datadashboard.yaml.dist /usr/local/etc/openvdm/datadashboard.yaml
-sudo chown -R root:root /usr/local/etc/openvdm
+sudo cp ~/openvdm_po /opt/
+sudo chown -R root:root /opt/openvdm_portoffice
 ```
 
-Copy the web-application code to a directory that can be accessed by Apache
+Create the three required configuration files from the example files provided.
 
 ```
-sudo cp -r ~/OpenVDMv2-PortOffice/var/www/OpenVDMv2-PortOffice /var/www/
-sudo chown -R root:root /var/www/OpenVDMv2-PortOffice
+sudo cp /opt/openvdm_portoffice/www/.htaccess.dist /opt/openvdm_portoffice/www/.htaccess
+sudo cp /opt/openvdm_portoffice/www/app/Core/Config.php.dist /opt/openvdm_portoffice/www/app/Core/Config.php
+sudo cp -r /opt/openvdm-portoffice/www/etc/datadashboard.yaml.dist /opt/openvdm-portoffice/www/etc/datadashboard.yaml
 ```
 
-Create the web-application errorlog file
-
-```
-sudo touch /var/www/OpenVDMv2-PortOffice/errorlog.html
-sudo chmod 777 /var/www/OpenVDMv2-PortOffice/errorlog.html
-```
-
-Create the two required configuration files from the example files provided.
-
-```
-cd /var/www/OpenVDMv2-PortOffice
-sudo cp ./.htaccess.dist ./.htaccess
-sudo cp ./app/Core/Config.php.dist ./app/Core/Config.php
-```
-
-Modify the two configuration files.
+Modify the three configuration files.
 
 Edit the .htaccess file:
 
 ```
-sudo nano /var/www/OpenVDMv2-PortOffice/.htaccess
+sudo nano /opt/openvdm_portoffice/www/.htaccess
 ```
 
-Set the RewriteBase to part of the URL after the hostname that will become the landing page for OpenVDMv2 - Port Office. By default this is set to OpenVDMv2 - Port Office meaning that once active users will go to `http://<IP or Hostname>/OpenVDMv2-PortOffice/`.
+Set the RewriteBase to part of the URL after the hostname that will become the landing page for OpenVDMv2 - Port Office. By default this is set to OpenVDMv2 - Port Office meaning that once active users will go to `http://<IP or Hostname>/`.
 
-Edit the ./app/Core/Config.php file:
+Edit the Config.php file:
 
 ```
-sudo nano /var/www/OpenVDMv2-PortOffice/app/Core/Config.php
+sudo nano /opt/openvdm_portoffice/www/app/Core/Config.php
 ```
 
 Set the cruise data base directory to what was created for **CruiseData**. Look for the following lines and change the IP address in the URL to the actual IP address or hostname of the warehouse:
@@ -186,7 +172,7 @@ Set the access creditials for the MySQL database. Look for the following lines a
 /*
  * Database name.
  */
-define('DB_NAME', 'OpenVDMv2_PO');
+define('DB_NAME', 'openvdm_po');
 
 /*
  * Database username.
@@ -199,6 +185,21 @@ define('DB_USER', 'openvdmDBUser');
 define('DB_PASS', 'oxhzbeY8WzgBL3');
 ```
 
+Create the web-application errorlog file
+
+```
+sudo touch /opt/openvdm-portoffice/www/errorlog.html
+sudo chmod 777 /opt/openvdm-portoffice/www/errorlog.html
+```
+
+Create a symbolic link from the web-application code directory to /var/www so that can be accessed by Apache
+
+```
+sudo ln -s /opt/openvdm-portoffice/www /var/www/openvdm_portoffice
+```
+
+## Setup Apache
+
 Edit the default Apache2 VHost file.
 
 ```
@@ -208,8 +209,8 @@ sudo nano /etc/apache2/sites-available/000-default.conf
 Copy the text below to the end Apache2 VHost file just above `</VirtualHost>`. You will need to alter the directory locations to match the locations selected for the CruiseData directory:
 
 ```
-  Alias /OpenVDMv2-PortOffice /var/www/OpenVDMv2-PortOffice
-  <Directory "/var/www/OpenVDMv2-PortOffice">
+  Alias /openvdm_portoffice /var/www/openvdm_portoffice
+  <Directory "/var/www/openvdm_portoffice">
     AllowOverride all
   </Directory>
 
@@ -238,7 +239,7 @@ It is recommended to change the password as soon as possible.
 ### An error has occured
 If after the install process the message "An error has occured" appears on the web-interface please refer to the errorlog file for more information on what exactly has happened.  The error log is html-formatted and can viewed in the browser at the following address:
 ```
-http://<ip address>/OpenVDMv2-PortOffice/errorlog.html
+http://<ip address>/errorlog.html
 ```
 
 ### Connecting OpenVDMv2 running on a vessel to OpenVDMv2 - Port Office
