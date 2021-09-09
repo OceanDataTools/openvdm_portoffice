@@ -92,7 +92,7 @@ class Warehouse extends Model {
         // var_dump($this->_lowerings); 
         if (!$this->_lowerings || (is_array($this->_lowerings) && sizeof($this->_lowerings) == 0)) {
         
-            $baseDir = $this->getShipboardDataWarehouseBaseDir();
+            $baseDir = $this->getShoresideDataWarehouseBaseDir();
             $cruiseDir = $baseDir . DIRECTORY_SEPARATOR . $this->getCruiseID();
             $loweringDataBaseDir = $cruiseDir . DIRECTORY_SEPARATOR . $this->getLoweringDataBaseDir();
             #var_dump($baseDir);
