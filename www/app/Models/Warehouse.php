@@ -9,6 +9,7 @@ class Warehouse extends Model {
     const CONFIG_FN = 'ovdmConfig.json';
     const LOWERING_CONFIG_FN = 'loweringConfig.json';
     const MANIFEST_FN = 'manifest.json';
+    const DATA_DASHBOARD_DIR = 'OpenVDM' . DIRECTORY_SEPARATOR . 'DashboardData'
     
     private $_cruises, $_lowerings;
 
@@ -94,7 +95,7 @@ class Warehouse extends Model {
         
             $baseDir = $this->getShoresideDataWarehouseBaseDir();
             $cruiseDir = $baseDir . DIRECTORY_SEPARATOR . $cruiseID;
-            $loweringDataBaseDir = $cruiseDir . DIRECTORY_SEPARATOR . $this->getLoweringDataBaseDir();
+            $loweringDataBaseDir = $cruiseDir . DIRECTORY_SEPARATOR . $DATA_DASHBOARD_DIR . DIRECTORY_SEPARATOR . $this->getLoweringDataBaseDir();
             #var_dump($baseDir);
             //Get the list of directories
             if (is_dir($loweringDataBaseDir)) {
