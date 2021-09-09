@@ -30,6 +30,16 @@ class DashboardData extends Controller {
         echo json_encode($warehouseModel->getLatestCruise());
     }
 
+    public function getLowerings($cruiseID) {
+        $warehouseModel = new \Models\Warehouse();
+        echo json_encode($warehouseModel->getLowerings($cruiseID));
+    }
+    
+    public function getLatestLowering($cruiseID) {
+        $warehouseModel = new \Models\Warehouse();
+        echo json_encode($warehouseModel->getLatestLowering($cruiseID));
+    }
+
     public function getDashboardDataTypes($cruiseID) {
         $this->_model->setCruiseID($cruiseID);
         echo json_encode($this->_model->getDashboardDataTypes($dataType));
