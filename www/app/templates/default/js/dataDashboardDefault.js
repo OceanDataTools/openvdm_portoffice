@@ -35,8 +35,8 @@ $(function () {
         
 
         greenIcon = new L.Icon({
-            iconUrl: '/bower_components/leaflet-color-markers/img/marker-icon-green.png',
-            shadowUrl: '/bower_components/leaflet/dist/images/marker-shadow.png',
+            iconUrl: './bower_components/leaflet-color-markers/img/marker-icon-green.png',
+            shadowUrl: './bower_components/leaflet/dist/images/marker-shadow.png',
             iconSize: [25, 41],
             iconAnchor: [12, 41],
             popupAnchor: [1, -34],
@@ -44,8 +44,8 @@ $(function () {
         });
 
         redIcon = new L.Icon({
-            iconUrl: '/bower_components/leaflet-color-markers/img/marker-icon-red.png',
-            shadowUrl: '/bower_components/leaflet/dist/images/marker-shadow.png',
+            iconUrl: './bower_components/leaflet-color-markers/img/marker-icon-red.png',
+            shadowUrl: './bower_components/leaflet/dist/images/marker-shadow.png',
             iconSize: [25, 41],
             iconAnchor: [12, 41],
             popupAnchor: [1, -34],
