@@ -25,6 +25,10 @@ class DataDashboard extends Controller {
         if(!Session::get('cruiseID')){
             Session::set('cruiseID', $this->_warehouseModel->getLatestCruise());
         }
+
+        if(!Session::get('loweringID')){
+            Session::set('loweringID', $this->_warehouseModel->getLatestLowering());
+        }
         
         $this->_dashboardDataModel = new \Models\DashboardData(Session::get('cruiseID'));
         $this->_dataDashboardModel = new \Models\DataDashboard();
@@ -62,7 +66,7 @@ class DataDashboard extends Controller {
         $data['title'] = $tab['title'];
         $data['page'] = $tabName;
         $data['cruiseID'] = Session::get('cruiseID');
-        $data['loweringID'] = $this->_warehouseModel->getLoweringID();
+        $data['loweringID'] = Session::get('loweringID');
         $data['loweringIDs'] = $this->_warehouseModel->getLowerings();
         $data['customDataDashboardTabs'] = $this->_dataDashboardModel->getDataDashboardTabs();
         $data['dataWarehouseApacheDir'] = $this->_warehouseModel->getShoresideDataWarehouseApacheDir();
@@ -231,4 +235,12 @@ class DataDashboard extends Controller {
         Url::previous();
     }
 
+    public function setLowering()
+    {
+        if(isset($_POST['loweringID'])){
+            Session::set('loweringID', $_POST['loweringID']);
+        }
+        
+        Url::previous();
+    }
 }
