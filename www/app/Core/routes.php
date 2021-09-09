@@ -27,6 +27,8 @@ Router::any('setCruise', 'Controllers\DataDashboard@setCruise');
 
 Router::any('api/dashboardData/getCruises', 'Controllers\Api\DashboardData@getCruises');
 Router::any('api/dashboardData/getLatestCruise', 'Controllers\Api\DashboardData@getLatestCruise');
+Router::any('api/dashboardData/getLowerings/(:any)', 'Controllers\Api\DashboardData@getLowerings');
+Router::any('api/dashboardData/getLatestLowering/(:any)', 'Controllers\Api\DashboardData@getLatestLowering');
 Router::any('api/dashboardData/getDataObjectsByType/(:any)/(:any)', 'Controllers\Api\DashboardData@getDataObjectsByType');
 Router::any('api/dashboardData/getLatestDataObjectByType/(:any)/(:any)', 'Controllers\Api\DashboardData@getLatestDataObjectByType');
 Router::any('api/dashboardData/getLatestVisualizerDataByType/(:any)/(:any)', 'Controllers\Api\DashboardData@getLatestVisualizerDataByType');

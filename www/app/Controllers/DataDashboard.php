@@ -67,7 +67,7 @@ class DataDashboard extends Controller {
         $data['title'] = $tab['title'];
         $data['page'] = $tabName;
         $data['cruiseID'] = Session::get('cruiseID');
-        $data['loweringID'] = Session::get('loweringID');
+        // $data['loweringID'] = Session::get('loweringID');
         $data['loweringIDs'] = $this->_warehouseModel->getLowerings($data['cruiseID']);
         $data['customDataDashboardTabs'] = $this->_dataDashboardModel->getDataDashboardTabs();
         $data['dataWarehouseApacheDir'] = $this->_warehouseModel->getShoresideDataWarehouseApacheDir();
