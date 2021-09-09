@@ -33,6 +33,8 @@ $hooks = Hooks::get();
     <?php echo (isset($data['tmsTypes']) ? 'var tmsTypes = [\'' . join('\', \'', $data['tmsTypes']) . '\'];' : ''); ?>
     
     <?php echo (isset($data['jsonTypes']) ? 'var jsonTypes = [\'' . join('\', \'', $data['jsonTypes']) . '\'];' : ''); ?>
+
+    <?php echo (isset($data['jsonReversedYTypes']) ? 'var jsonReversedYTypes = [\'' . join('\', \'', $data['jsonReversedYTypes']) . '\'];' : ''); ?>
         
 <?php
     if(isset($data['subPages'])) {

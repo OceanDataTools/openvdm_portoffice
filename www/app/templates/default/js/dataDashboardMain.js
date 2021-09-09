@@ -82,7 +82,6 @@ $(function () {
                         yAxis: yAxes,
                         series: seriesData
                     };
-                    console.log(chartOptions);
                     $(placeholder).highcharts(chartOptions);
                 }
             }
