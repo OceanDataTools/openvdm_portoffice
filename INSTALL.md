@@ -202,6 +202,7 @@ sudo ln -s /opt/openvdm_portoffice/www /var/www/openvdm_portoffice
 Install the dependency libraries
 
 ```
+npm install -g bower
 cd ~
 curl -sS https://getcomposer.org/installer | php
 mv composer.phar /usr/local/bin/composer
