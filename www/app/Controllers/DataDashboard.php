@@ -27,7 +27,7 @@ class DataDashboard extends Controller {
         }
 
         if(!Session::get('loweringID')){
-            Session::set('loweringID', $this->_warehouseModel->getLatestLowering());
+            Session::set('loweringID', $this->_warehouseModel->getLatestLowering(Session::get('cruiseID')));
         }
         
         $this->_dashboardDataModel = new \Models\DashboardData(Session::get('cruiseID'));
@@ -67,7 +67,7 @@ class DataDashboard extends Controller {
         $data['page'] = $tabName;
         $data['cruiseID'] = Session::get('cruiseID');
         $data['loweringID'] = Session::get('loweringID');
-        $data['loweringIDs'] = $this->_warehouseModel->getLowerings();
+        $data['loweringIDs'] = $this->_warehouseModel->getLowerings($data['cruiseID']);
         $data['customDataDashboardTabs'] = $this->_dataDashboardModel->getDataDashboardTabs();
         $data['dataWarehouseApacheDir'] = $this->_warehouseModel->getShoresideDataWarehouseApacheDir();
 

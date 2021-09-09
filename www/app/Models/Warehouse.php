@@ -88,12 +88,12 @@ class Warehouse extends Model {
         return $this->getCruises()[0];
     }
 
-    public function getLowerings(){
+    public function getLowerings($cruiseID){
         // var_dump($this->_lowerings); 
         if (!$this->_lowerings || (is_array($this->_lowerings) && sizeof($this->_lowerings) == 0)) {
         
             $baseDir = $this->getShoresideDataWarehouseBaseDir();
-            $cruiseDir = $baseDir . DIRECTORY_SEPARATOR . $this->getCruiseID();
+            $cruiseDir = $baseDir . DIRECTORY_SEPARATOR . $cruiseID;
             $loweringDataBaseDir = $cruiseDir . DIRECTORY_SEPARATOR . $this->getLoweringDataBaseDir();
             #var_dump($baseDir);
             //Get the list of directories
@@ -142,7 +142,7 @@ class Warehouse extends Model {
         }
     }
 
-    public function getLatestLowering() {
-        return $this->getLowerings()[0];
+    public function getLatestLowering($cruiseID) {
+        return $this->getLowerings($cruiseID)[0];
     }
 }
