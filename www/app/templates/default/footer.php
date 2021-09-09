@@ -49,27 +49,39 @@ $hooks = Hooks::get();
 
 </script>
 
-<?php
+<?php 
 
 $jsFileArray = array(
-    'https://code.jquery.com/jquery-2.2.3.min.js',
-    'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js',
-    'https://use.fontawesome.com/3830781cff.js',
+    DIR . 'bower_components/jquery/dist/jquery.min.js',
+    DIR . 'bower_components/bootstrap/dist/js/bootstrap.min.js',
+    DIR . 'bower_components/metisMenu/dist/metisMenu.min.js',
+    DIR . 'bower_components/js-cookie/src/js.cookie.js',
+    Url::templatePath() . 'js/sb-admin-2.js',
+    Url::templatePath() . 'js/header.js',    
+    Url::templatePath() . 'js/modals.js',
 );
-
+    
 if (isset($data['javascript'])){
     foreach ($data['javascript'] as &$jsFile) {
         if ($jsFile === 'leaflet') {
-            array_push($jsFileArray, 'http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js');
-            array_push($jsFileArray, 'https://cdn.jsdelivr.net/leaflet.esri/1.0.3/esri-leaflet.js');
-            array_push($jsFileArray, 'https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js');
-            array_push($jsFileArray, 'https://cdn.jsdelivr.net/npm/leaflet-easyprint@2.1.9/dist/bundle.min.js');
+            array_push($jsFileArray, DIR . 'bower_components/leaflet/dist/leaflet.js');
+            array_push($jsFileArray, DIR . 'bower_components/esri-leaflet/dist/esri-leaflet.js');
+            array_push($jsFileArray, DIR . 'bower_components/leaflet-fullscreen-bower/Leaflet.fullscreen.min.js');
+            array_push($jsFileArray, DIR . 'bower_components/leaflet-easyprint/dist/bundle.js');
+            //array_push($jsFileArray, Url::templatePath() . "js/esriCredit.js");
+        } else if ($jsFile === 'leaflet-timedimension') {
+            array_push($jsFileArray, DIR . 'bower_components/leaflet-timedimension/dist/leaflet.timedimension.min.js');
         } else if ($jsFile === 'highcharts') {
-            array_push($jsFileArray, 'https://code.highcharts.com/highcharts.js');
+            array_push($jsFileArray, DIR . 'bower_components/highcharts.com/lib/highcharts.js');
+            array_push($jsFileArray, Url::templatePath() . 'js/highcharts-fa-plugin.js');
         } else if ($jsFile === 'highcharts-exporting') {
-            array_push($jsFileArray, 'https://code.highcharts.com/modules/exporting.js');
+            array_push($jsFileArray, DIR . 'bower_components/highcharts.com/lib/modules/exporting.js');
+        } else if ($jsFile === 'datetimepicker') {
+            array_push($jsFileArray, DIR . 'bower_components/moment/moment.js');
+            array_push($jsFileArray, DIR . 'bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js');   
+            array_push($jsFileArray, Url::templatePath() . 'js/datetimepicker.js');
         } else {
-            array_push($jsFileArray, Url::templatePath() . "js/" . $jsFile . ".js");
+            array_push($jsFileArray, Url::templatePath() . 'js/' . $jsFile . '.js');
         }
     }
 }

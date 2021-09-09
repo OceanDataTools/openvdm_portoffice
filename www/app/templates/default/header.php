@@ -27,7 +27,7 @@ $data['cruiseList'] = $warehouseModel->getCruises();
 	<meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Open Vessel Data Management v2.1 (OpenVDMv2) - Port Office">
+    <meta name="description" content="Open Vessel Data Management v2.6 (OpenVDM) - Port Office">
     <meta name="author" content="Capable Solutions">
 	<title><?php echo $data['title'].' - '.SITETITLE; //SITETITLE defined in app/core/config.php ?></title>
 
@@ -35,15 +35,23 @@ $data['cruiseList'] = $warehouseModel->getCruises();
 <?php
 
     $cssFileArray = array(
-        'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css',
+        DIR . 'bower_components/bootstrap/dist/css/bootstrap.min.css',
+        DIR . 'bower_components/metisMenu/dist/metisMenu.min.css',
+        DIR . 'bower_components/font-awesome/css/font-awesome.min.css',
+        Url::templatePath() . 'css/sb-admin-2.css',
+        Url::templatePath() . 'css/timeline.css',
         Url::templatePath() . 'css/style.css',
     );
 
     if (isset($data['css'])){
         foreach ($data['css'] as &$cssFile) {
             if ($cssFile === 'leaflet') {
-                array_push($cssFileArray, 'http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css');
-                array_push($cssFileArray, 'https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css');
+                array_push($cssFileArray, DIR . 'bower_components/leaflet/dist/leaflet.css');
+                array_push($cssFileArray, DIR . 'bower_components/leaflet-fullscreen-bower/leaflet.fullscreen.css');
+            } else if ($cssFile === 'leaflet-timedimension') {
+                array_push($cssFileArray, DIR . 'bower_components/leaflet-timedimension/dist/leaflet.timedimension.control.css');
+            } else if ($cssFile === 'datetimepicker') {
+                array_push($cssFileArray, DIR . 'bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css');
             } else {
                 array_push($cssFileArray, Url::templatePath() . "css/" . $cssFile . ".css");
             }
