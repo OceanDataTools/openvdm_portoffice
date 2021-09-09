@@ -47,10 +47,11 @@ class Warehouse extends Model {
                                     $ovdmConfigJSON = json_decode($ovdmConfigContents,true);
                                     #var_dump($ovdmConfigJSON['extraDirectoriesConfig']);
                                     //Get the the directory that holds the DashboardData
-                                    for($i = 0; $i < count($ovdmConfigJSON['extraDirectoriesConfig']); $i++){
-                                        if(strcmp($ovdmConfigJSON['extraDirectoriesConfig'][$i]['name'], 'Dashboard Data') === 0){
+				    for($i = 0; $i < count($ovdmConfigJSON['extraDirectoriesConfig']); $i++){
+                                        if(strcmp($ovdmConfigJSON['extraDirectoriesConfig'][$i]['name'], 'Dashboard_Data') === 0){
                                             $dataDashboardList = scandir($baseDir . DIRECTORY_SEPARATOR . $rootValue . DIRECTORY_SEPARATOR . $ovdmConfigJSON['extraDirectoriesConfig'][$i]['destDir']);
-                                            foreach ($dataDashboardList as $dataDashboardKey => $dataDashboardValue){
+					    #var_dump($dataDashboardList);
+					    foreach ($dataDashboardList as $dataDashboardKey => $dataDashboardValue){
                                                 //If a manifest file is found, add CruiseID to output
                                                 if (in_array($dataDashboardValue,array(self::MANIFEST_FN))){
                                                     $this->_cruises[] = $rootValue;
