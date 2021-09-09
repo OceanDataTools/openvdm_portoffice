@@ -9,7 +9,8 @@ $(function () {
         colors: ['#337ab7', '#5cb85c', '#d9534f', '#f0ad4e', '#606060']
     });
     
-    function displayLatestJSON(dataType) {
+    function displayLatestJSON(dataType, reversedY) {
+        var reversedY = reversedY || false;
         var getVisualizerDataURL = siteRoot + 'api/dashboardData/getLatestVisualizerDataByType/' + cruiseID + '/' + dataType;
         $.getJSON(getVisualizerDataURL, function (data, status) {
             if (status === 'success' && data !== null) {
@@ -25,6 +26,86 @@ $(function () {
                     
                     for (i = 0; i < data.length; i++) {
                         yAxes[i] = {
+                            labels: {
+                                enabled: false
+                            },
+                            title: {
+                                enabled: false
+                            }
+                        };
+
+                        if (reversedY || data[i].label == "Depth") {
+                            yAxes[i].reversed = true;
+                        }
+
+                        seriesData[i] = {
+                            name: data[i].label,
+                            yAxis: i,
+                            data: data[i].data,
+                            animation: false
+                        };
+                    }
+                
+                    var chartOptions = {
+                        chart: {
+                            type: 'line',
+                            events: {
+                                click: function (e) {
+                                    window.location.href = siteRoot + 'dataDashboard/customTab/' + subPages[dataType] + '#' + dataType;
+                                }
+                            }
+                        },
+                        plotOptions: {
+                            series: {
+                                events: {
+                                    legendItemClick: function () {
+                                        return false;
+                                    }
+                                },
+                                states: {
+                                    hover: {
+                                        enabled: false
+                                    }
+                                }
+                            }
+                        },
+                        title: {text: ''},
+                        tooltip: false,
+                        legend: {
+                            enabled: true
+                        },
+                        xAxis: {
+                            type: 'datetime',
+                            title: {text: ''},
+                            dateTimeLabelFormats: {millisecond: '%H', second: '%H:%M:%S', minute: '%H:%M', hour: '%H:%M', day: '%b %e', week: '%b %e', month: '%b \'%y', year: '%Y'}
+                        },
+                        yAxis: yAxes,
+                        series: seriesData
+                    };
+                    $(placeholder).highcharts(chartOptions);
+                }
+            }
+        });
+    }
+
+
+    function displayLatestInvertedJSON(dataType) {
+        var getVisualizerDataURL = siteRoot + 'api/dashboardData/getLatestVisualizerDataByType/' + cruiseID + '/' + dataType;
+        $.getJSON(getVisualizerDataURL, function (data, status) {
+            if (status === 'success' && data !== null) {
+                
+                var placeholder = '#' + dataType + '-placeholder';
+                if (data.indexOf('error') > 0) {
+                    $(placeholder).html('<strong>Error: ' + data.error + '</strong>');
+                } else {
+                    var seriesData = [],
+                        yAxes = [],
+                        xAxes = [],
+                        i = 0;
+                    
+                    for (i = 0; i < data.length; i++) {
+                        yAxes[i] = {
+                            reversed: true,
                             labels: {
                                 enabled: false
                             },
@@ -143,14 +224,14 @@ $(function () {
                     });
 
                     //Add basemap layer, use ESRI Oceans Base Layer
-                    L.esri.basemapLayer("Oceans").addTo(mapdb);
-                    //L.tileLayer(window.location.origin + MAPPROXY_DIR +'/tms/1.0.0/WorldOceanBase/EPSG900913/{z}/{x}/{y}.png', {
-                    //    tms:true,
-                    //    zoomOffset:-1,
-                    //    minZoom:1,
-                    //    maxNativeZoom:9,
-                    //    attribution: '<a href="http://www.esri.com" target="_blank" style="border: none;">esri</a>'
-                    //}).addTo(mapdb);
+                    //L.esri.basemapLayer("Oceans").addTo(mapdb);
+                    L.tileLayer(window.location.origin + MAPPROXY_DIR +'/tms/1.0.0/WorldOceanBase/EPSG900913/{z}/{x}/{y}.png', {
+                        tms:true,
+                        zoomOffset:-1,
+                        minZoom:1,
+                        maxNativeZoom:9,
+                        attribution: '<a href="http://www.esri.com" target="_blank" style="border: none;">esri</a>'
+                    }).addTo(mapdb);
                     
                     // Add latest trackline (GeoJSON)
                     ggaData.addTo(mapdb);
@@ -196,14 +277,14 @@ $(function () {
                     });
 
                     //Add basemap layer, use ESRI Oceans Base Layer
-                    L.esri.basemapLayer("Oceans").addTo(mapdb);
-                    //L.tileLayer(window.location.origin + MAPPROXY_DIR +'/tms/1.0.0/WorldOceanBase/EPSG900913/{z}/{x}/{y}.png', {
-                    //    tms:true,
-                    //    zoomOffset:-1,
-                    //    minZoom:1,
-                    //    maxNativeZoom:9,
-                    //    attribution: '<a href="http://www.esri.com" target="_blank" style="border: none;">esri</a>'
-                    //}).addTo(mapdb);
+                    //L.esri.basemapLayer("Oceans").addTo(mapdb);
+                    L.tileLayer(window.location.origin + MAPPROXY_DIR +'/tms/1.0.0/WorldOceanBase/EPSG900913/{z}/{x}/{y}.png', {
+                        tms:true,
+                        zoomOffset:-1,
+                        minZoom:1,
+                        maxNativeZoom:9,
+                        attribution: '<a href="http://www.esri.com" target="_blank" style="border: none;">esri</a>'
+                    }).addTo(mapdb);
                     
                     // Add latest trackline (GeoJSON)
                     L.tileLayer(location.protocol + '//' + location.host + cruiseDataDir + '/' + data[0]['tileDirectory'] + '/{z}/{x}/{y}.png', {
@@ -230,12 +311,17 @@ $(function () {
                 displayLatestTMS(tmsTypes[i]);
             }
         }
-
         for (i = 0; i < jsonTypes.length; i++) {
             if ($('#' + jsonTypes[i] + '-placeholder').length) {
                 displayLatestJSON(jsonTypes[i]);
             }
         }
+        for (i = 0; i < jsonReversedYTypes.length; i++) {
+            if ($('#' + jsonReversedYTypes[i] + '-placeholder').length) {
+                displayLatestJSON(jsonReversedYTypes[i], true);
+            }
+        }
+
     }
     
     displayLatestData();

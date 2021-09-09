@@ -6,6 +6,9 @@ $(function () {
     Highcharts.setOptions({
         colors: ['#337ab7', '#5cb85c', '#d9534f', '#f0ad4e', '#606060']
     });
+
+    var greenIcon = null;
+    var redIcon = null;    
     
     var chartHeight = 200;
 
@@ -30,6 +33,25 @@ $(function () {
         
         var mapObject = [];
         
+
+        greenIcon = new L.Icon({
+            iconUrl: '/bower_components/leaflet-color-markers/img/marker-icon-green.png',
+            shadowUrl: '/bower_components/leaflet/dist/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        });
+
+        redIcon = new L.Icon({
+            iconUrl: '/bower_components/leaflet-color-markers/img/marker-icon-red.png',
+            shadowUrl: '/bower_components/leaflet/dist/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        });
+
         //Build mapObject object
         mapObject['placeholderID'] = placeholderID;
         mapObject['objectListID'] = objectListID;
@@ -42,41 +64,43 @@ $(function () {
         mapObject['map'] = L.map(mapObject['placeholderID'], {
             //maxZoom: 13,
             fullscreenControl: true,
+            //timeDimension: true,
+//            timeDimensionControl: true,
         }).setView(L.latLng(0, 0), 2);
 
         //Add basemap layer, use ESRI Oceans Base Layer
-        var worldOceanBase = L.esri.basemapLayer('Oceans', { maxNativeZoom: 10 }),
-            worldOceanReference = L.esri.basemapLayer('OceansLabels', { maxNativeZoom: 10 }),
-            gmrtBase = L.tileLayer.wms('http://gmrt.marine-geo.org/cgi-bin/mapserv?map=/public/mgg/web/gmrt.marine-geo.org/htdocs/services/map/wms_merc.map', {
-                layers: 'topo',
-                transparent: true,
-                //format: 'image/png',
-                version: '1.1.1',
-                crs: L.CRS.EPSG4326,
-                attribution: '<a href="http://www.marine-geo.org/portals/gmrt/" target="_blank">GMRT</a>'
-            });
+        var worldOceanBase = L.esri.basemapLayer('Oceans'),
+           worldOceanReference = L.esri.basemapLayer('OceansLabels'),
+           gmrtBase = L.tileLayer.wms('http://gmrt.marine-geo.org/cgi-bin/mapserv?map=/public/mgg/web/gmrt.marine-geo.org/htdocs/services/map/wms_merc.map', {
+               layers: 'topo',
+               transparent: true,
+               //format: 'image/png',
+               version: '1.1.1',
+               crs: L.CRS.EPSG4326,
+               attribution: '<a href="http://www.marine-geo.org/portals/gmrt/" target="_blank">GMRT</a>'
+           });
         
-        //var worldOceanBase = L.tileLayer(window.location.origin + MAPPROXY_DIR +'/tms/1.0.0/WorldOceanBase/EPSG900913/{z}/{x}/{y}.png', {
-        //    tms:true,
-        //    zoomOffset:-1,
-        //    minZoom:1,
-        //    maxNativeZoom:9,
-        //    attribution: '<a href="http://www.esri.com" target="_blank" style="border: none;">esri</a>'
-        //}),
-        //    worldOceanReference = L.tileLayer(window.location.origin + MAPPROXY_DIR +'/tms/1.0.0/WorldOceanReference/EPSG900913/{z}/{x}/{y}.png', {
-        //    tms:true,
-        //    zoomOffset:-1,
-        //    minZoom:1,
-        //    maxNativeZoom:9,
-        //    attribution: '<a href="http://www.esri.com" target="_blank" style="border: none;">esri</a>'
-        //}),
-	    //    gmrtBase = L.tileLayer(window.location.origin + MAPPROXY_DIR +'/tms/1.0.0/GMRTBase/EPSG900913/{z}/{x}/{y}.png', {
-        //    tms:true,
-        //    zoomOffset:-1,
-        //    minZoom:1,
-        //    attribution: '<a href="http://www.marine-geo.org/portals/gmrt/" target="_blank">GMRT</a>'
-        //});
-
+        // var worldOceanBase = L.tileLayer(window.location.origin + MAPPROXY_DIR +'/tms/1.0.0/WorldOceanBase/EPSG900913/{z}/{x}/{y}.png', {
+        //         tms:true,
+        //         zoomOffset:-1,
+        //         minZoom:1,
+        //         maxNativeZoom:9,
+        //         attribution: '<a href="http://www.esri.com" target="_blank" style="border: none;">esri</a>'
+        //     }),
+        //     worldOceanReference = L.tileLayer(window.location.origin + MAPPROXY_DIR +'/tms/1.0.0/WorldOceanReference/EPSG900913/{z}/{x}/{y}.png', {
+        //         tms:true,
+        //         zoomOffset:-1,
+        //         minZoom:1,
+        //         maxNativeZoom:9,
+        //         attribution: '<a href="http://www.esri.com" target="_blank" style="border: none;">esri</a>'
+        //     }),
+        //     gmrtBase = L.tileLayer(window.location.origin + MAPPROXY_DIR +'/tms/1.0.0/GMRTBase/EPSG900913/{z}/{x}/{y}.png', {
+        //         tms:true,
+        //         zoomOffset:-1,
+        //         minZoom:1,
+        //         attribution: '<a href="http://www.marine-geo.org/portals/gmrt/" target="_blank">GMRT</a>'
+        //     });
+        
         worldOceanBase.addTo(mapObject['map']);
         worldOceanBase.bringToBack();
         worldOceanReference.addTo(mapObject['map']);
@@ -91,7 +115,44 @@ $(function () {
         };
         
         L.control.layers(baseLayers, overlays).addTo(mapObject['map']);
-             
+
+        L.easyPrint({
+            title: 'Export current map view',
+            tileLayer: baseLayers,
+            position: 'topright',
+            hideControlContainer: true,
+            exportOnly: true,
+            filename: 'openvdm_map_export'
+            // sizeModes: ['A4Portrait', 'A4Landscape']
+        }).addTo(mapObject['map']);
+
+    // start of TimeDimension manual instantiation
+    //var timeDimension = new L.TimeDimension({
+    //        period: "PT1M",
+    //    });
+    // helper to share the timeDimension object between all layers
+    //mapObject['map'].timeDimension = timeDimension;
+
+    // otherwise you have to set the 'timeDimension' option on all layers.
+        //var timeDimensionControlOptions = {
+            //player:        player,
+            //timeDimension: timeDimension,
+            //position:      'bottomleft',
+            //autoPlay:      true,
+            //minSpeed:      1,
+            //speedStep:     0.5,
+            //maxSpeed:      15,
+            //timeSliderDragUpdate: true
+            //'backwardButton': false,
+            //'playButton': false,
+            //'forwardButton': false,
+            //'speedSlider': false
+        //};
+
+        //var timeDimensionControl = new L.Control.TimeDimension(timeDimensionControlOptions);
+        //mapObject['map'].addControl(timeDimensionControl);
+        
+        
         return mapObject;
     }
     
@@ -113,6 +174,8 @@ $(function () {
         $( '#' + mapObject['objectListID']).find(':checkbox:checked').each(function() {
             if ($(this).hasClass("lp-checkbox")) {
                 addLatestPositionToMap(mapObject, $(this).val());
+            } else if ($(this).hasClass("se-checkbox")) {
+                addStartEndPositionsToMap(mapObject, $(this).val());
             } else if ($(this).hasClass("geoJSON-checkbox")) {
                 //alert($(this).val());
                 addGeoJSONToMap(mapObject, $(this).val());
@@ -124,11 +187,12 @@ $(function () {
     }
     
     function chartChecked(chartObject) {
-        //alert('#' + chartObject['objectListID']);        
-        //alert($( '#' + chartObject['objectListID']).length);
-        //alert($( '#' + chartObject['objectListID']).find(':radio:checked').length);
         $( '#' + chartObject['objectListID']).find(':radio:checked').each(function() {
-            updateChart(chartObject, $(this).val());
+            if ($(this).hasClass( "json-reversed-y-radio" )) {
+                updateChart(chartObjects[i], $(this).val(), true);
+            } else {
+                updateChart(chartObjects[i], $(this).val());
+            }
         }); 
     }
     
@@ -141,7 +205,7 @@ $(function () {
                     $('#' + mapObject['placeholderID']).html('<strong>Error: ' + data.error + '</strong>');
                 } else {
                     //Get the last coordinate from the latest trackline
-                    var lastCoordinate = data[0].features[0].geometry.coordinates[data[0].features[0].geometry.coordinates.length - 1];
+                    var lastCoordinate = data[0].features[data[0].features.length - 1].geometry.coordinates[data[0].features[data[0].features.length - 1].geometry.coordinates.length - 1];
                     var latestPosition = L.latLng(lastCoordinate[1], lastCoordinate[0]);
                     
                     if (lastCoordinate[0] < 0) {
@@ -163,12 +227,80 @@ $(function () {
         });
     }
 
+    function addStartEndPositionsToMap(mapObject, dataType) {
+        var loweringID = $('#lowering_sel').val();        
+        var getDashboardDataFilesURL = siteRoot + 'api/dashboardData/getDataObjectsByType/' + cruiseID + '/' + dataType;
+        $.getJSON(getDashboardDataFilesURL, function (data, status) {
+            if (status === 'success' && data !== null) {
+               
+               var files = data[0].filter(function(object) {
+                   return object['raw_data'].includes(loweringID)
+               })
+               
+               var getVisualizerDataURL = siteRoot + 'api/dashboardData/getDashboardObjectVisualizerDataByJsonName/' + cruiseID + '/' + files[0]['dd_json'];
+               $.getJSON(getVisualizerDataURL, function (data, status) {
+                    if (status === 'success' && data !== null) {
+
+                        if ('error' in data) {
+                            $('#' + mapObject['placeholderID']).html('<strong>Error: ' + data.error + '</strong>');
+                        } else {
+                    
+                            //Get the last coordinate from the latest trackline
+                            var firstCoordinate = data[0].features[data[0].features.length - 1].geometry.coordinates[0];
+                            var startPosition = L.latLng(firstCoordinate[1], firstCoordinate[0]);
+
+                            if (firstCoordinate[0] < 0) {
+                                startPosition = startPosition.wrap(360, 0);
+                            } else {
+                                startPosition = startPosition.wrap();
+                            }
+
+                            var lastCoordinate = data[0].features[data[0].features.length - 1].geometry.coordinates[data[0].features[data[0].features.length - 1].geometry.coordinates.length - 1];
+                            var endPosition = L.latLng(lastCoordinate[1], lastCoordinate[0]);
+
+                            if (lastCoordinate[0] < 0) {
+                                endPosition = endPosition.wrap(360, 0);
+                            } else {
+                                endPosition = endPosition.wrap();
+                            }
+
+                            var bounds = new L.LatLngBounds([startPosition, endPosition]);
+                            mapObject['mapBounds']['StartEndPositions-' + dataType] = bounds;
+
+                            // Add marker at the last coordinate
+                            mapObject['markers']['StartPosition-' + dataType] = L.marker(startPosition, {icon: greenIcon});
+                            mapObject['markers']['StartPosition-' + dataType].addTo(mapObject['map']);
+
+                            mapObject['markers']['EndPosition-' + dataType] = L.marker(endPosition, {icon: redIcon});
+                            mapObject['markers']['EndPosition-' + dataType].addTo(mapObject['map']);
+
+                            updateBounds(mapObject);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+
+    function removeStartEndPositionsFromMap(mapObject, dataType) {
+        mapObject['map'].removeLayer(mapObject['markers']['StartPosition-' + dataType]);
+        mapObject['map'].removeLayer(mapObject['markers']['EndPosition-' + dataType]);
+            
+        //remove the bounds and re-center/re-zoom the map
+        delete mapObject['markers']['StartPositios-' + dataType];
+        delete mapObject['markers']['EndPosition-' + dataType];
+        delete mapObject['mapBounds']['StartEndPositions-' + dataType]
+ 
+        updateBounds(mapObject);
+    }
+
     function removeLatestPositionFromMap(mapObject, dataType) {
         mapObject['map'].removeLayer(mapObject['markers']['LatestPosition-' + dataType]);
             
         //remove the bounds and re-center/re-zoom the map
         delete mapObject['markers']['LatestPosition-' + dataType];
-        
+        delete mapObject['mapBounds']['LatestPosition-' + dataType]
         updateBounds(mapObject);
     }
 
@@ -182,7 +314,12 @@ $(function () {
                     $(placeholder).html('<strong>Error: ' + data.error + '</strong>');
                 } else {
                     // Build the layer
-                    mapObject['geoJSONLayers'][dataObjectJsonName] = L.geoJson(data[0], { style: { weight: 3 },
+                    //mapObject['geoJSONLayers'][dataObjectJsonName] = L.timeDimension.layer.geoJson(data[0], {
+                    mapObject['geoJSONLayers'][dataObjectJsonName] = L.geoJson(data[0], {
+                        style: { weight: 3 },
+                        //udpateTimeDimension: true,
+                        addLastPoint: true,
+                        waitForReady: true,
                         coordsToLatLng: function (coords) {
                             var longitude = coords[0],
                                 latitude = coords[1];
@@ -276,9 +413,9 @@ $(function () {
         updateBounds(mapObject);
     }
     
-    function updateChart(chartObject, dataObjectJsonName) {
+    function updateChart(chartObject, dataObjectJsonName, reversedY) {
+        var reversedY = reversedY || false;
         var getVisualizerDataURL = siteRoot + 'api/dashboardData/getDashboardObjectVisualizerDataByJsonName/' + cruiseID + '/' + dataObjectJsonName;
-        //console.log(getVisualizerDataURL);
         $.getJSON(getVisualizerDataURL, function (data, status) {
             if (status === 'success' && data !== null) {
 
@@ -310,10 +447,9 @@ $(function () {
                             yAxes[i].opposite = true;
                         }
 
-                        //if (data[i].label === "Humidity (%)") {
-                        //    yAxes[i].min = 0;
-                        //    yAxes[i].max = 100;
-                        //}
+                        if (reversedY || data[i].label == "Depth") {
+                            yAxes[i].reversed = true;
+                        }
 
                         seriesData[i] = {
                             name: data[i].label +  ' (' + data[i].unit + ')',
@@ -331,9 +467,9 @@ $(function () {
                             crosshairs: true,
                             xDateFormat: '%Y-%m-%d',
                             formatter: function() {
-                                var toolTipStr = '<span style="font-size: 10px">Time: ' + Highcharts.dateFormat('%b %e, %Y - %H:%M:%S', this.x) + '</span>';
+                                var toolTipStr = '<span style="font-size: 10px">Time: ' + Highcharts.dateFormat('%b %e %Y - %H:%M:%S', this.x) + '</span>';
                                 $.each(this.points, function (i) {
-                                    toolTipStr += '<br/>' + '<span style="font-size: 10px; color:' + this.series.color + '">\u25CF</span><span style="font-size: 10px"> ' + data[i].label + ': ' + this.y +  ' ' + data[i].unit + '</span>';
+                                    toolTipStr += '<br/>' + '<span style="font-size: 10px; color:' + this.series.color + '">\u25CF</span><span style="font-size: 10px"> ' + this.series.name + ': ' + this.y +  ' </span>';
                                 });
                                 return toolTipStr;
                             }
@@ -362,6 +498,7 @@ $(function () {
                         //}
                     };
 
+//                    console.log('chartOptions:', chartOptions)
                     $(placeholder).highcharts(chartOptions);
                 }
             }
@@ -400,10 +537,13 @@ $(function () {
     }
     
     //Check for updates
-    $.each(mapObjects, function(i) {
+    $.each(mapObjects, function(i) {        
         $( '#' + mapObjects[i]['objectListID']).find(':checkbox:checked').change(function() {
             if ($(this).is(":checked")) {
-                if ($(this).hasClass("lp-checkbox")) {
+                if ($(this).hasClass("se-checkbox")) {
+                    //alert($(this).val());
+                    addStartEndPositionsToMap(mapObjects[i], $(this).val());
+                } else if ($(this).hasClass("lp-checkbox")) {
                     //alert($(this).val());
                     addLatestPositionToMap(mapObjects[i], $(this).val());
                 } else if ($(this).hasClass("geoJSON-checkbox")) {
@@ -414,7 +554,10 @@ $(function () {
                     addTMSToMap(mapObjects[i], $(this).val());
                 }
             } else {
-                if ($(this).hasClass("lp-checkbox")) {
+                if ($(this).hasClass("se-checkbox")) {
+                    //alert($(this).val());
+                    removeStartEndPositionsFromMap(mapObjects[i], $(this).val());
+                } else if ($(this).hasClass("lp-checkbox")) {
                     //alert($(this).val());
                     removeLatestPositionFromMap(mapObjects[i], $(this).val());
                 } else if ($(this).hasClass("geoJSON-checkbox")) {
@@ -426,12 +569,37 @@ $(function () {
                 }
             }
         });
+        
+        $( '#' + mapObjects[i]['objectListID']).find('.clearAll').click(function() {
+            var row = $(this).closest("div.row")
+            $.each(row.find(':checkbox'), function () {
+                if ($(this).prop('checked')) {
+                    $(this).prop('checked', false); // Unchecks it
+                    $(this).trigger('change');
+                }
+            });
+        });
+
+        $( '#' + mapObjects[i]['objectListID']).find('.selectAll').click(function() {
+            var row = $(this).closest("div.row")
+            $.each(row.find(':checkbox'), function () {
+                if (!$(this).prop('checked')) {
+                    $(this).prop('checked', true); // Unchecks it
+                    $(this).trigger('change');
+                }
+            });
+        });
+
     });
     
     //Check for updates
     $.each(chartObjects, function(i) {
         $( '#' + chartObjects[i]['objectListID']).find(':radio').change(function() {
-            updateChart(chartObjects[i], $(this).val());
+        if ($(this).hasClass( "json-reversed-y-radio" )) {
+                updateChart(chartObjects[i], $(this).val(), true);
+            } else {
+                updateChart(chartObjects[i], $(this).val());
+            }
         });
         
         $( '#' + chartObjects[i]['dataType'] + '_expand-btn').click(function() {
@@ -444,5 +612,7 @@ $(function () {
             chartObjects[i]['expanded'] = !chartObjects[i]['expanded'];
         });
     });
+    
+    
 
 });
