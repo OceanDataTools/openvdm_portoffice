@@ -84,7 +84,7 @@ sudo chown -R survey:survey /mnt/vault/Shoreside
 From a terminal window type:
 
 ```
-sudo apt-get install git
+sudo apt-get install git npm
 cd
 git clone git clone https://github.com/OceanDataTools/openvdm_portoffice.git
 ```
@@ -197,6 +197,16 @@ Create a symbolic link from the web-application code directory to /var/www so th
 
 ```
 sudo ln -s /opt/openvdm_portoffice/www /var/www/openvdm_portoffice
+```
+
+Install the dependency libraries
+
+```
+cd ~
+curl -sS https://getcomposer.org/installer | php
+mv composer.phar /usr/local/bin/composer
+cd /opt/openvdm_portoffice/www
+composer -q install
 ```
 
 ## Setup Apache
