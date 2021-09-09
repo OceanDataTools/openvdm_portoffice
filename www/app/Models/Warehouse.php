@@ -9,7 +9,7 @@ class Warehouse extends Model {
     const CONFIG_FN = 'ovdmConfig.json';
     const LOWERING_CONFIG_FN = 'loweringConfig.json';
     const MANIFEST_FN = 'manifest.json';
-    const DATA_DASHBOARD_DIR = 'OpenVDM' . DIRECTORY_SEPARATOR . 'DashboardData'
+    const DATA_DASHBOARD_DIR = 'OpenVDM' . DIRECTORY_SEPARATOR . 'DashboardData';
     
     private $_cruises, $_lowerings;
 
@@ -95,8 +95,8 @@ class Warehouse extends Model {
         
             $baseDir = $this->getShoresideDataWarehouseBaseDir();
             $cruiseDir = $baseDir . DIRECTORY_SEPARATOR . $cruiseID;
-            $loweringDataBaseDir = $cruiseDir . DIRECTORY_SEPARATOR . $DATA_DASHBOARD_DIR . DIRECTORY_SEPARATOR . $this->getLoweringDataBaseDir();
-            #var_dump($baseDir);
+            $loweringDataBaseDir = $cruiseDir . DIRECTORY_SEPARATOR . self::DATA_DASHBOARD_DIR . DIRECTORY_SEPARATOR . $this->getLoweringDataBaseDir();
+            #var_dump($loweringDataBaseDir);
             //Get the list of directories
             if (is_dir($loweringDataBaseDir)) {
                 $rootList = scandir($loweringDataBaseDir);
@@ -108,26 +108,27 @@ class Warehouse extends Model {
                     {
                         if (is_dir($loweringDataBaseDir . DIRECTORY_SEPARATOR . $rootValue) && is_readable($loweringDataBaseDir . DIRECTORY_SEPARATOR . $rootValue))
                         {
-                            //Check each Directory for ovdmConfig.json
-                            $loweringList = scandir($loweringDataBaseDir . DIRECTORY_SEPARATOR . $rootValue);
+                            #Check each Directory for ovdmConfig.json
+                            #$loweringList = scandir($loweringDataBaseDir . DIRECTORY_SEPARATOR . $rootValue);
                             #var_dump($cruiseList);
-                            foreach ($loweringList as $loweringKey => $loweringValue){
+                            #foreach ($loweringList as $loweringKey => $loweringValue){
                                 #var_dump($loweringValue);
-                                if (in_array($loweringValue,array(self::LOWERING_CONFIG_FN))){
+                                #if (in_array($loweringValue,array(self::LOWERING_CONFIG_FN))){
                                     #var_dump($loweringDataBaseDir . DIRECTORY_SEPARATOR . $rootValue . DIRECTORY_SEPARATOR . self::LOWERING_CONFIG_FN);
-                                    $loweringConfigContents = file_get_contents($loweringDataBaseDir . DIRECTORY_SEPARATOR . $rootValue . DIRECTORY_SEPARATOR . self::LOWERING_CONFIG_FN);
-                                    $loweringConfigJSON = json_decode($loweringConfigContents,true);
+                                    #$loweringConfigContents = file_get_contents($loweringDataBaseDir . DIRECTORY_SEPARATOR . $rootValue . DIRECTORY_SEPARATOR . self::LOWERING_CONFIG_FN);
+                                    #$loweringConfigJSON = json_decode($loweringConfigContents,true);
                                     #var_dump($ovdmConfigJSON['extraDirectoriesConfig']);
                                     //Get the the directory that holds the DashboardData
-                                    $this->_lowerings[] = $rootValue;
-                                    break;
-                                }
-                            }
+                                    #$this->_lowerings[] = $rootValue;
+                                    #break;
+                                #}
+				#}
+			    $this->_lowerings[] = $rootValue;
                         }
                     }
                 }
             }
-            //var_dump($this->_lowerings);
+            # var_dump($this->_lowerings);
 
             //If there are no lowerings
             if(!$this->_lowerings) {
