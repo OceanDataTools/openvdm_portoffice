@@ -30,4 +30,3 @@ foreach($data['customDataDashboardTabs'] as $row){
         </div>
         <br>
 <!-- End of dataDashboardHeader -->
-

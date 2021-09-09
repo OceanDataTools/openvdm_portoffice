@@ -32,7 +32,7 @@ class Config
         /*
          * Define relative base path.
          */
-        define('DIR', '/OpenVDMv2-PortOffice/');
+        define('DIR', '/');
 
         /*
          * Define path on webserver that contains cruise data
