@@ -2,7 +2,7 @@
 
 ## Install Guide
 
-At the time of this writing OpenVDMv2 - Port Office was built and tested against the Ubuntu 20.04 LTS operating system. It may be possible to build against other linux-based operating systems however for the purposes of this guide the instructions will assume Ubuntu 20.04 LTS is used.
+At the time of this writing OpenVDM - Port Office was built and tested against the Ubuntu 20.04 LTS operating system. It may be possible to build against other linux-based operating systems however for the purposes of this guide the instructions will assume Ubuntu 20.04 LTS is used.
 
 ### Operating System
 Goto <https://www.ubuntu.com/download>
@@ -13,7 +13,7 @@ Perform the default Uubuntu install. For these instructions the default account 
 
 A few minutes after the install completes and the computer restarts, Ubuntu will ask to install any updates that have arrived since the install image was created. Perform these now and do not continue with these instructions until the update has completed.
 
-Before OpenVDMv2 - Port Office can be installed serveral other services and software packaged must be installed and configured.
+Before OpenVDM - Port Office can be installed serveral other services and software packaged must be installed and configured.
 
 ### MySQL Database Server
 All of the commonly used variables, tranfer profiles, and user creditials for OpenVDM - Port Office are stored in a SQL database. This allows fast access to the stored information as well as a proven mechanism for multiple clients to change records without worry of write collisions. OpenVDM - Port Office uses the MySQL open-source database server.
@@ -24,7 +24,7 @@ sudo apt-get install mysql-server
 ```
 
 ### PHP7.3
-The language used to write the OpenVDMv2 web-interface is PHP.
+The language used to write the OpenVDM web-interface is PHP.
 
 To install PHP open a terminal window and type:
 ```
@@ -39,7 +39,7 @@ sudo apt-get install php7.3 php7.3-cli php7.3-mysql php7.3-dev php7.3-zip php7.3
 
 ### Apache2 Web-server
 
-The OpenVDMv2-PortOffice web-application is served by the Warehouse via the Apache2 Web-Server
+The OpenVDM-PortOffice web-application is served by the Warehouse via the Apache2 Web-Server
 
 Apache2 is installed by Ubuntu by default but additional Apache2 modules must be install and enabled. 
 
@@ -63,14 +63,14 @@ After installing/enabling the module the webserver must be restarted:
 sudo service apache2 restart
 ```
 
-### OpenVDMv2 - Port Office
+### OpenVDM - Port Office
 Create the Required Directories
 
-In order for OpenVDMv2 - Port Office to properly store data serveral directories must be created on the PortOffice server.
+In order for OpenVDM - Port Office to properly store data serveral directories must be created on the PortOffice server.
 
 - **CruiseData** - This is the location where the incoming Cruise Data directories will be located.
 
-The Location of the **CruiseData** needs to be large enough to hold multiple cruises worth of data. In typical installation of OpenVDMv2 - Port Office, the location of the **CruiseData** is on dedicated hardware (internal RAID array). In these cases the volume is mounted at boot by the OS to a specific location (i.e. `/mnt/vault`). Instructions on mounting volumes at boot is beyond the scope of these installation procedures.
+The Location of the **CruiseData** needs to be large enough to hold multiple cruises worth of data. In typical installation of OpenVDM - Port Office, the location of the **CruiseData** is on dedicated hardware (internal RAID array). In these cases the volume is mounted at boot by the OS to a specific location (i.e. `/mnt/vault`). Instructions on mounting volumes at boot is beyond the scope of these installation procedures.
 
 For the purposes of these installation instructions the name of the **CruiseData** folder will be `Shoreside`, it will be located at `/mnt/vault` and the user that will retain ownership of this folders will be "survey"
 
@@ -89,7 +89,7 @@ cd
 git clone git clone https://github.com/OceanDataTools/openvdm_portoffice.git
 ```
 
-### Create OpenVDMv2 Database
+### Create OpenVDM Database
 
 To create a new database first connect to MySQL by typing:
 
@@ -124,7 +124,7 @@ Exit the MySQL console:
 exit
 ```
 
-## Install OpenVDMv2 - Port Office Web-Application
+## Install OpenVDM - Port Office Web-Application
 
 Copy the datadashboard configuration file to the proper location.  This will require creating a directory.
 
@@ -149,7 +149,7 @@ Edit the .htaccess file:
 sudo nano /opt/openvdm_portoffice/www/.htaccess
 ```
 
-Set the RewriteBase to part of the URL after the hostname that will become the landing page for OpenVDMv2 - Port Office. By default this is set to OpenVDMv2 - Port Office meaning that once active users will go to `http://<IP or Hostname>/`.
+Set the RewriteBase to part of the URL after the hostname that will become the landing page for OpenVDM - Port Office. By default this is set to OpenVDM - Port Office meaning that once active users will go to `http://<IP or Hostname>/`.
 
 Edit the Config.php file:
 
@@ -242,8 +242,8 @@ Reload Apache2
 sudo service apache2 reload
 ```
 
-At this point OpenVDMv2 - Port Office should be installed and awaiting incoming data.
-Goto to the URL for OpenVDMv2 - Port Office as defined earlier.
+At this point OpenVDM - Port Office should be installed and awaiting incoming data.
+Goto to the URL for OpenVDM - Port Office as defined earlier.
 The default username/password are: admin/demo.
 
 It is recommended to change the password as soon as possible.
@@ -254,12 +254,12 @@ If after the install process the message "An error has occured" appears on the w
 http://<ip address>/errorlog.html
 ```
 
-### Connecting OpenVDMv2 running on a vessel to OpenVDMv2 - Port Office
+### Connecting OpenVDM running on a vessel to OpenVDM - Port Office
 
-For security reasons the connection between OpenVDMv2 and OpenVDMv2 - Port Office must be initiated from the vessel.  The remainder of the instructions within this section are meant to be executed within the OpenVDMv2 installation on the vessel.
+For security reasons the connection between OpenVDM and OpenVDM - Port Office must be initiated from the vessel.  The remainder of the instructions within this section are meant to be executed within the OpenVDM installation on the vessel.
 
 #### Configure the Shoreside Data Warehouse
-From the OpenVDMv2 web-application goto the "System" tab in the "Configuration" section.
+From the OpenVDM web-application goto the "System" tab in the "Configuration" section.
 
 Click the "Edit" link next to Shoreside Data Warehouse (SSDW)
 
@@ -270,7 +270,7 @@ When complete click the "Update" button to save the changes.
 To verify the configuration is correct click the "Test" link next to "Shoreside Data Warehouse (SSDW)".
 
 #### Enable the Required Ship-to-Shore Transfer profiles
-From the OpenVDMv2 web-application goto the "System" tab in the "Configuration" section.
+From the OpenVDM web-application goto the "System" tab in the "Configuration" section.
 
 Within the **OpenVDM Specific Ship-to-Shore Transfers** panel, make sure the "Dashboard Data" AND "OpenVDM Configuration" transfers are enabled.
 
@@ -280,7 +280,7 @@ To manually initiate a ship-to-shore transfer goto the "Ship-to-Shore Transfers"
 Click the "Run Ship-to-Shore Transfer"
 
 #### Automatic Ship-to-Shore Transfers
-While OpenVDMv2 System Status is "On" AND Ship-to-Shore Tranfers are enabled, OpenVDMv2 will automatically attempt to push new data to shore every 5 minutes.
+While OpenVDM System Status is "On" AND Ship-to-Shore Tranfers are enabled, OpenVDM will automatically attempt to push new data to shore every 5 minutes.
 
 #### Custom Data Dashboard configuration
 If the data dashboard running on OpenVDM has been customized and you wish to have the same look/feel with PortOffice, replace the default datadashboard.yaml file with the one used by OpenVDM.  If custom javascript has been developed to further customize the datadashboard in OpenVDM, copy those view (.php) and javascript (.js) files to the cooresponding locations in PortOffice.
