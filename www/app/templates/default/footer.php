@@ -7,17 +7,11 @@ use Helpers\Session;
 
 //initialise hooks
 $hooks = Hooks::get();
-?>
 
-<!-- Start of footer -->
-    </div>
-    <footer class="footer">
-        <div class="container-fluid" style="max-width:1400px">
-            <div class="pull-right text-muted" style="padding-top:15px;padding-right:15px">
-                <a href="https://github.com/webbpinner/OpenVDMv2-PortOffice" target="_blank">OpenVDMv2 - PortOffice</a> is licensed under the <a href="http://www.gnu.org/licenses/gpl-3.0.html">GPLv3</a> public license.
-            </div>
-        </div>
-    </footer>
+?>
+</div> <!-- page-wrapper -->
+    <span class="text-muted pull-right" style="padding: 15px"><a href="https://github.com/oceandatatools/openvdm_portoffice" target="_blank">OpenVDM - Port Office</a> is licensed under the <a href="http://www.gnu.org/licenses/MIT">MIT</a> public license</span>
+</div> <!-- wrapper -->
 
 
 <!-- JS -->
@@ -86,6 +80,7 @@ $hooks->run('js');
 
 //hook for plugging in code into the footer
 $hooks->run('footer');
+
 ?>
 
 </body>
